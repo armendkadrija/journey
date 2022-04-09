@@ -1,12 +1,7 @@
 ﻿using System.Reflection;
 using Journey.Application.Common.Interfaces;
-using Journey.Domain.Common;
 using Journey.Domain.Entities;
-using Duende.IdentityServer.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-
 namespace Journey.Infrastructure.Persistence;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext

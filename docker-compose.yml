@@ -8,21 +8,32 @@ services:
       context: .
       dockerfile: src/WebUI/Dockerfile
     environment:
-      - "ConnectionStrings__DefaultConnection=Server=db;Database=JourneyDb;User=sa;Password=Your_password123;MultipleActiveResultSets=true"
-      - "IdentityServer__Key__Type=Development"
+      - "ConnectionStrings__DefaultConnection=Server=db;Port=5432;Database=JourneyDB;User Id=sa;Password=journey_db"
       - "ASPNETCORE_Kestrel__Certificates__Default__Password=CertPassword"
       - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx"
     volumes:
       - ~/.aspnet/https:/https:ro
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - 5000:5000
+      - 5001:5001
     depends_on:
       - db
+    networks:
+      - journey-network
 
   db:
-    container_name: journey_db
-    image: "mcr.microsoft.com/mssql/server"
+    container_name: journey-db
+    image: postgres
+    restart: always
     environment:
-      - "SA_PASSWORD=Your_password123"
-      - "ACCEPT_EULA=Y"
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: journey_db
+      POSTGRES_DB: JourneyDB
+    ports:
+      - 5432:5432
+    networks:
+      - journey-network
+
+networks:
+  journey-network:
+    driver: bridge
