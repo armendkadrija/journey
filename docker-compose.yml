@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  app:
+    container_name: journey-app
+    image: ${DOCKER_REGISTRY-}webui
+    build:
+      context: .
+      dockerfile: src/WebUI/Dockerfile
+    environment:
+      - "ConnectionStrings__DefaultConnection=Server=db;Database=JourneyDb;User=sa;Password=Your_password123;MultipleActiveResultSets=true"
+      - "IdentityServer__Key__Type=Development"
+      - "ASPNETCORE_Kestrel__Certificates__Default__Password=CertPassword"
+      - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - db
+
+  db:
+    container_name: journey_db
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      - "SA_PASSWORD=Your_password123"
+      - "ACCEPT_EULA=Y"
