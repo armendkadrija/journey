@@ -1,12 +1,10 @@
 using Journey.Application;
-using Journey.Application.Common.Interfaces;
 using Journey.Infrastructure;
 using Journey.Infrastructure.Persistence;
 using Journey.WebUI.Filters;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using NSwag;
-using NSwag.Generation.Processors.Security;
+using Infrastructure.Workers;
 
 namespace Journey.WebUI;
 
@@ -46,6 +44,10 @@ public class Startup
         {
             configure.Title = "Journey API";
         });
+
+        // Add background services
+        services
+         .AddHostedService<MqttWorker>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

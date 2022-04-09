@@ -14,8 +14,8 @@ services:
     volumes:
       - ~/.aspnet/https:/https:ro
     ports:
-      - 5000:5000
-      - 5001:5001
+      - 6000:5000
+      - 6001:5001
     depends_on:
       - db
     networks:
