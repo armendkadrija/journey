@@ -1,4 +1,5 @@
 using Application.Common.Models;
+using Application.Extensions;
 using Application.WeatherForecasts.Commands;
 using Infrastructure.Configurations;
 using MediatR;
@@ -16,6 +17,8 @@ namespace Infrastructure.Workers
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ILogger<MQTTWorker> _logger;
         private readonly MQTTOptions _mqttOptions;
+        private readonly Queue<VehiclePositionPayload> _queue;
+
         public MQTTWorker(
             IServiceScopeFactory serviceScopeFactory,
             ILogger<MQTTWorker> logger,
@@ -24,7 +27,7 @@ namespace Infrastructure.Workers
             this._serviceScopeFactory = serviceScopeFactory;
             this._logger = logger;
             this._mqttOptions = mqttOptions;
-
+            _queue = new Queue<VehiclePositionPayload>();
         }
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -54,24 +57,45 @@ namespace Infrastructure.Workers
             _mqttClient.UseDisconnectedHandler(async e => await OnDisconnected(e, _mqttClient, options));
 
             // Setup handler for handling reciving messages
-            _mqttClient.UseApplicationMessageReceivedHandler(async message =>
-            {
-                string stringPayload = System.Text.Encoding.UTF8.GetString(message.ApplicationMessage.Payload);
-
-                _logger.LogInformation("### RECEIVED APPLICATION MESSAGE ###");
-
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    var _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    TopicPayload? payload = JsonSerializer.Deserialize<TopicPayload>(stringPayload);
-
-                    if (payload != null)
-                        await _mediator.Send(new CreateVehiclePositionCommand() { VehiclePosition = payload.VP });
-                };
-            });
+            _mqttClient.UseApplicationMessageReceivedHandler(OnMessageRecieved);
         }
 
         #region Handlers
+        public async Task OnMessageRecieved(MqttApplicationMessageReceivedEventArgs message)
+        {
+            string stringMessagePayload = System.Text.Encoding.UTF8.GetString(message.ApplicationMessage.Payload);
+
+            _logger.LogInformation("### RECEIVED APPLICATION MESSAGE ###");
+
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                TopicPayload? messagePayload = JsonSerializer.Deserialize<TopicPayload>(stringMessagePayload);
+
+                // Queee message
+                if (messagePayload != null)
+                    _queue.Enqueue(messagePayload.VP);
+                else
+                    return;
+
+                // Quee Size
+                var queueSize = 0;
+                _queue.TryGetNonEnumeratedCount(out queueSize);
+                _logger.LogInformation($"### QUEUE SIZE {queueSize} ###");
+
+                // Deque batch of 100 items
+                if (queueSize >= 100)
+                {
+                    // Dequee
+                    var messages = _queue.DequeueChunk<VehiclePositionPayload>(queueSize);
+                    var vehiclePositions = messages.ToList();
+                    _logger.LogInformation($"### DEQUED  {vehiclePositions.Count()} MESSAGES ###");
+
+                    // Persist
+                    await _mediator.Send(new CreateBatchVehiclePositionCommand() { VehiclePositions = vehiclePositions });
+                }
+            };
+        }
 
         public async Task OnDisconnected(MqttClientDisconnectedEventArgs obj, IMqttClient _mqttClient, IMqttClientOptions options)
         {
