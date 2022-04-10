@@ -16,6 +16,7 @@
           {
             "name": "Latitude",
             "in": "query",
+            "description": "Latitude of location",
             "schema": {
               "type": "number",
               "format": "double"
@@ -25,6 +26,7 @@
           {
             "name": "Longitude",
             "in": "query",
+            "description": "Longitude of location",
             "schema": {
               "type": "number",
               "format": "double"
@@ -34,6 +36,7 @@
           {
             "name": "WithinDistance",
             "in": "query",
+            "description": "Distance radius in meters (Default 500)",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -41,8 +44,9 @@
             "x-position": 3
           },
           {
-            "name": "PageNumber",
+            "name": "WithinSeconds",
             "in": "query",
+            "description": "Last known location in seconds (Default 5)",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -50,13 +54,24 @@
             "x-position": 4
           },
           {
-            "name": "PageSize",
+            "name": "PageNumber",
             "in": "query",
+            "description": "Page number (Default 1)",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "x-position": 5
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Page size (Default 20)",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 6
           }
         ],
         "responses": {
