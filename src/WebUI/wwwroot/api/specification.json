@@ -39,6 +39,24 @@
               "format": "int32"
             },
             "x-position": 3
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 5
           }
         ],
         "responses": {
@@ -47,10 +65,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VehiclePositionDTO"
-                  }
+                  "$ref": "#/components/schemas/PaginatedListOfVehiclePositionDTO"
                 }
               }
             }
@@ -61,6 +76,36 @@
   },
   "components": {
     "schemas": {
+      "PaginatedListOfVehiclePositionDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VehiclePositionDTO"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
       "VehiclePositionDTO": {
         "type": "object",
         "additionalProperties": false,
