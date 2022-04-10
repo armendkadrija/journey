@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using AutoMapper;
 using Journey.Application.Common.Mappings;
 using Journey.Domain.Entities;
+using NetTopologySuite.Geometries;
 
 namespace Application.Common.Models
 {
@@ -52,7 +53,8 @@ namespace Application.Common.Models
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<VehiclePositionPayload, VehiclePosition>();
+            profile.CreateMap<VehiclePositionPayload, VehiclePosition>()
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => new Point(src.Longitude, src.Latitude)));
         }
     }
 }

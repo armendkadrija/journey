@@ -13,7 +13,11 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
          options.UseNpgsql(
              configuration.GetConnectionString("DefaultConnection"),
-             b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+             b =>
+             {
+                 b.UseNetTopologySuite();
+                 b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+             }));
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 

@@ -4,6 +4,7 @@ services:
   app:
     container_name: journey-app
     image: ${DOCKER_REGISTRY-}webui
+    restart: on-failure
     build:
       context: .
       dockerfile: src/WebUI/Dockerfile
@@ -23,12 +24,13 @@ services:
 
   db:
     container_name: journey-db
-    image: postgres
     restart: always
+    image: kartoza/postgis:14 
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: journey_db
       POSTGRES_DB: JourneyDB
+      POSTGRES_MULTIPLE_EXTENSIONS: postgis,hstore,postgis_topology,postgis_raster,pgrouting
     ports:
       - 5432:5432
     networks:
