@@ -10,7 +10,7 @@ public class VehiclePositionCommand : IEntityTypeConfiguration<VehiclePosition>
     public void Configure(EntityTypeBuilder<VehiclePosition> builder)
     {
         builder.HasKey(prop => prop.Id);
-        builder.HasIndex(prop => new { prop.Latitude, prop.Longitude });
+        builder.HasIndex(prop => new { prop.Latitude, prop.Longitude, prop.Location });
         builder
             .Property(b => b.Location)
             .HasColumnType("geography (point)")

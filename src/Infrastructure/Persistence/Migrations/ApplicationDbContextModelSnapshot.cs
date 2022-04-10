@@ -28,67 +28,85 @@ namespace Journey.Infrastructure.Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<double>("Acceleration")
-                        .HasColumnType("double precision");
+                        .HasColumnType("double precision")
+                        .HasColumnName("acceleration");
 
                     b.Property<string>("Direction")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("direction");
 
                     b.Property<bool>("DoorStatus")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("door_status");
 
                     b.Property<int>("HeadingDegree")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("heading_degree");
 
                     b.Property<double>("Latitude")
-                        .HasColumnType("double precision");
+                        .HasColumnType("double precision")
+                        .HasColumnName("latitude");
 
                     b.Property<Point>("Location")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("geography (point)")
-                        .HasDefaultValue((NetTopologySuite.Geometries.Point)new NetTopologySuite.IO.WKTReader().Read("SRID=0;POINT EMPTY"));
+                        .HasDefaultValue((NetTopologySuite.Geometries.Point)new NetTopologySuite.IO.WKTReader().Read("SRID=0;POINT EMPTY"))
+                        .HasColumnName("location");
 
                     b.Property<string>("LocationSource")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("location_source");
 
                     b.Property<double>("Longitude")
-                        .HasColumnType("double precision");
+                        .HasColumnType("double precision")
+                        .HasColumnName("longitude");
 
                     b.Property<int>("Occupants")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("occupants");
 
                     b.Property<int>("Operator")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("operator");
 
                     b.Property<string>("Route")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("route");
 
                     b.Property<string>("RouteNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("route_number");
 
                     b.Property<double>("Speed")
-                        .HasColumnType("double precision");
+                        .HasColumnType("double precision")
+                        .HasColumnName("speed");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time_stamp");
 
                     b.Property<int>("VehicleNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("vehicle_number");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_vehicle_positions");
 
-                    b.HasIndex("Latitude", "Longitude");
+                    b.HasIndex("Latitude", "Longitude")
+                        .HasDatabaseName("ix_vehicle_positions_latitude_longitude");
 
-                    b.ToTable("VehiclePositions");
+                    b.ToTable("vehicle_positions", (string)null);
                 });
 #pragma warning restore 612, 618
         }
