@@ -19,6 +19,8 @@ namespace Journey.Domain.Entities
         public double Acceleration { get; set; }
         public Boolean DoorStatus { get; set; }
         public string LocationSource { get; set; }
+        public int? StopId { get; set; }
+        public Stop? Stop { get; set; }
         public string Route { get; set; }
         public int Occupants { get; set; }
     }

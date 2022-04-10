@@ -114,6 +114,7 @@ namespace Infrastructure.Workers
                 _logger.LogInformation("### RECONNECTING FAILED ###");
             }
         }
+
         public void OnConnected(MqttClientConnectedEventArgs obj)
         {
             _logger.LogInformation("Successfully connected.");

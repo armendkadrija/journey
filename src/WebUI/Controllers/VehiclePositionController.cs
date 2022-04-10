@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.VehiclePositions.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Journey.WebUI.Controllers;
 
 public class VehiclePositionController : ApiControllerBase
 {
     [HttpGet("/buses/near")]
-    public async Task<int> GetNear()
+    public async Task<IEnumerable<VehiclePositionDTO>> GetNear([FromQuery] GetNearestBusesQuery query)
     {
-        return await Mediator.Send(new GetNearestBusesQuery());
+        return await Mediator.Send(query);
     }
 }

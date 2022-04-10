@@ -12,14 +12,45 @@
           "VehiclePosition"
         ],
         "operationId": "VehiclePosition_GetNear",
+        "parameters": [
+          {
+            "name": "Latitude",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Longitude",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "WithinDistance",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VehiclePositionDTO"
+                  }
                 }
               }
             }
@@ -28,5 +59,107 @@
       }
     }
   },
-  "components": {}
+  "components": {
+    "schemas": {
+      "VehiclePositionDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "routeNumber": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "vehicleNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "speed": {
+            "type": "number",
+            "format": "double"
+          },
+          "headingDegree": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "acceleration": {
+            "type": "number",
+            "format": "double"
+          },
+          "doorStatus": {
+            "type": "boolean"
+          },
+          "locationSource": {
+            "type": "string"
+          },
+          "stopId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "stop": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StopDto"
+              }
+            ]
+          },
+          "route": {
+            "type": "string"
+          },
+          "occupants": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "StopDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "zone": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
 }

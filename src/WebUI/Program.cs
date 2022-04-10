@@ -22,6 +22,8 @@ public class Program
                     context.Database.Migrate();
                 }
 
+                // seed stops
+                await ApplicationDbContextSeeder.SeedStops(context);
             }
             catch (Exception ex)
             {

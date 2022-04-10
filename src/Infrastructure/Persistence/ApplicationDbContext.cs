@@ -13,6 +13,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     }
 
     public DbSet<VehiclePosition> VehiclePositions => Set<VehiclePosition>();
+    public DbSet<Stop> Stops => Set<Stop>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

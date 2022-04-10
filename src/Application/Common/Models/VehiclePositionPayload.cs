@@ -44,12 +44,14 @@ namespace Application.Common.Models
         [JsonPropertyName("loc")]
         public string LocationSource { get; set; }
 
+        [JsonPropertyName("stop")]
+        public int? StopId { get; set; }
+
         [JsonPropertyName("route")]
         public string Route { get; set; }
 
         [JsonPropertyName("occu")]
         public int Occupants { get; set; }
-
 
         public void Mapping(Profile profile)
         {
