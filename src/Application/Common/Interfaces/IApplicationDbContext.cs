@@ -5,7 +5,7 @@ namespace Journey.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<Route> Routes { get; }
+    DbSet<VehiclePosition> VehiclePositions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

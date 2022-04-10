@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Application.Common.Models;
 using Application.WeatherForecasts.Commands;
 using MediatR;
 using MQTTnet;
@@ -38,24 +40,24 @@ namespace Infrastructure.Workers
             // Subscribe to a topic
             await mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/hfp/v2/journey/ongoing/vp/bus/+/+/+/+/+/+/#").Build());
 
-            mqttClient.UseApplicationMessageReceivedHandler(async e =>
+            mqttClient.UseApplicationMessageReceivedHandler(async message =>
             {
-                string result = System.Text.Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 
-                Console.WriteLine($"MQTT Client: OnNewMessage Topic: {e.ApplicationMessage.Topic} / Message: {result}");
+                string result = System.Text.Encoding.UTF8.GetString(message.ApplicationMessage.Payload);
+
+                Console.WriteLine($"MQTT Client: OnNewMessage Topic: {message.ApplicationMessage.Topic} / Message: {result}");
                 Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
 
-                while (!stoppingToken.IsCancellationRequested)
+                using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    using (var scope = _serviceScopeFactory.CreateScope())
-                    {
-                        var _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    var _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    TopicPayload? payload = JsonSerializer.Deserialize<TopicPayload>(result);
 
-                        await _mediator.Send(new CreateRouteCommand() { Title = "Result" });
+                    if (payload != null)
+                        await _mediator.Send(new CreateVehiclePositionCommand() { VehiclePosition = payload.VP });
 
-                        await Task.Delay(TimeSpan.FromMilliseconds(30));
-                    };
-                }
+                    await Task.Delay(TimeSpan.FromMilliseconds(30));
+                };
             });
         }
     }

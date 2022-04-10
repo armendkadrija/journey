@@ -12,7 +12,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
     }
 
-    public DbSet<Route> Routes => Set<Route>();
+    public DbSet<VehiclePosition> VehiclePositions => Set<VehiclePosition>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
