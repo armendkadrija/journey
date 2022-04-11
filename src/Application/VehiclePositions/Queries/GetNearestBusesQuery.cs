@@ -19,11 +19,8 @@ public class GetNearestBusesQuery : IRequest<PaginatedList<VehiclePositionDTO>>
     [Display(Description = "Longitude of location")]
     public double Longitude { get; set; }
 
-    [Display(Description = "Distance radius in meters (Default 500)")]
+    [Display(Description = "Radius distance in meters (Default 500)")]
     public int WithinDistance { get; set; } = 500;
-
-    [Display(Description = "Time from last known location in seconds (Default 5)")]
-    public int WithinSeconds { get; set; } = 5;
 
     [Display(Description = "Page number (Default 1)")]
     public int PageNumber { get; set; } = 1;
@@ -47,16 +44,34 @@ public class GetNearestBusesWithPaginationHandler : IRequestHandler<GetNearestBu
     public async Task<PaginatedList<VehiclePositionDTO>> Handle(GetNearestBusesQuery request, CancellationToken cancellationToken)
     {
         var location = new Point(request.Longitude, request.Latitude);
-        var secondsAgo = DateTime.Now.AddSeconds(request.WithinSeconds * -1);
 
+        // FIXME Revert to EF query when DISTINCT ON is supported by EF or implement as Stored Procedure
+        // Not fan of :(
         var busLocations = _context.VehiclePositions
-            .Include(vehicle => vehicle.Stop)
-            .Where(vehicle =>
-                vehicle.Location.IsWithinDistance(location, request.WithinDistance) &&
-                vehicle.TimeStamp >= secondsAgo
-            )
-            .OrderBy(vehicle => vehicle.Location.Distance(location))
-            .OrderByDescending(vehicle => vehicle.TimeStamp);
+            .FromSqlRaw(@"
+                SELECT 
+                    DISTINCT ON (vehicle_number) vehicle_number,
+                    id,
+                    route_number,
+                    direction,
+                    operator,
+                    time_stamp,
+                    speed,
+                    heading_degree,
+                    latitude,
+                    longitude,
+                    location,
+                    acceleration,
+                    door_status,
+                    location_source,
+                    route,
+                    occupants,
+                    stop_id
+                FROM vehicle_positions
+                WHERE ST_DWithin(location, ST_MakePoint({0},{1})::geography, {2}) AND stop_id IS NOT NULL
+                ORDER BY vehicle_number, location <-> ST_MakePoint({0},{1})::geography, time_stamp DESC
+            ", request.Longitude, request.Latitude, request.WithinDistance)
+            .Include(vehicle => vehicle.Stop);
 
         var mappedBusLocations = await busLocations
             .ProjectTo<VehiclePositionDTO>(_mapper.ConfigurationProvider)

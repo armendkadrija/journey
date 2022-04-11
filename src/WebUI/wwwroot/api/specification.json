@@ -8,7 +8,9 @@
   "paths": {
     "/buses/near": {
       "get": {
-        "tags": ["VehiclePosition"],
+        "tags": [
+          "VehiclePosition"
+        ],
         "operationId": "VehiclePosition_GetNearestBuses",
         "parameters": [
           {
@@ -34,22 +36,12 @@
           {
             "name": "WithinDistance",
             "in": "query",
-            "description": "Distance radius in meters (Default 500)",
+            "description": "Radius distance in meters (Default 500)",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "x-position": 3
-          },
-          {
-            "name": "WithinSeconds",
-            "in": "query",
-            "description": "Time from last known location in seconds (Default 5)",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 4
           },
           {
             "name": "PageNumber",
@@ -59,7 +51,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 5
+            "x-position": 4
           },
           {
             "name": "PageSize",
@@ -69,7 +61,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 6
+            "x-position": 5
           }
         ],
         "responses": {
