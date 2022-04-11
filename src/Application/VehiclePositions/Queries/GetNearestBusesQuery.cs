@@ -22,7 +22,7 @@ public class GetNearestBusesQuery : IRequest<PaginatedList<VehiclePositionDTO>>
     [Display(Description = "Distance radius in meters (Default 500)")]
     public int WithinDistance { get; set; } = 500;
 
-    [Display(Description = "Last known location in seconds (Default 5)")]
+    [Display(Description = "Time from last known location in seconds (Default 5)")]
     public int WithinSeconds { get; set; } = 5;
 
     [Display(Description = "Page number (Default 1)")]

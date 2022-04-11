@@ -9,7 +9,7 @@ public class VehiclePositionController : ApiControllerBase
     [HttpGet("/buses/near")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(PaginatedList<VehiclePositionDTO>), 200)]
-    public async Task<PaginatedList<VehiclePositionDTO>> GetNear([FromQuery] GetNearestBusesQuery query)
+    public async Task<PaginatedList<VehiclePositionDTO>> GetNearestBuses([FromQuery] GetNearestBusesQuery query)
     {
         return await Mediator.Send(query);
     }

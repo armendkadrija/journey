@@ -8,10 +8,8 @@
   "paths": {
     "/buses/near": {
       "get": {
-        "tags": [
-          "VehiclePosition"
-        ],
-        "operationId": "VehiclePosition_GetNear",
+        "tags": ["VehiclePosition"],
+        "operationId": "VehiclePosition_GetNearestBuses",
         "parameters": [
           {
             "name": "Latitude",
@@ -46,7 +44,7 @@
           {
             "name": "WithinSeconds",
             "in": "query",
-            "description": "Last known location in seconds (Default 5)",
+            "description": "Time from last known location in seconds (Default 5)",
             "schema": {
               "type": "integer",
               "format": "int32"
