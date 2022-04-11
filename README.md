@@ -27,13 +27,19 @@ The following will need to be executed from your terminal to create a cert
 
 ```sh
 dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p CertPassword
+```
+
+```sh
 dotnet dev-certs https --trust
 ```
 
 ##### FOR MacOS:
 
 ```sh
-dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p CertPassword`
+dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p CertPassword
+```
+
+```sh
 dotnet dev-certs https --trust
 ```
 
@@ -41,6 +47,10 @@ dotnet dev-certs https --trust
 
 ```sh
 dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p CertPassword
+```
+
+```sh
+dotnet dev-certs https --trust
 ```
 
 In order to build and run the docker containers, execute `docker-compose up -d --build` from the root of the solution.
