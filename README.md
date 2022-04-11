@@ -51,3 +51,8 @@ After the docker containers are up & running, imediately background worker is ac
 
 To test & view api documentation open `Swagger` link
 [https://localhost:6001/api/index.html?url=/api/specification.json](https://localhost:6001/api/index.html?url=/api/specification.json#/VehiclePosition/VehiclePosition_GetNearestBuses)
+
+### Improvements
+
+- Besides queue size limit, add a time constraint limit which would compensate for cases when queue takes time to fill.
+- Add postgress replicas designated only for read.
