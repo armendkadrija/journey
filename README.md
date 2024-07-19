@@ -1,6 +1,6 @@
 # Journey
 
-This service/API subscribes to telemetry data from the MQQT server `mqtt.hsl.fi` which publishes positions of vehicles in the HSL area, and stores those telemetry data for later consumption.
+This service/API subscribes to telemetry data from the MQTT server `mqtt.hsl.fi` which publishes positions of vehicles in the HSL area, and stores those telemetry data for later consumption.
 
 I used those telemetry data by utilizing MQQTNet which is a client library, then created a background worker creates connection to `mqtt.hsl.fi` and subscribes to topic `/hfp/v2/journey/ongoing/vp/bus/#`. This topic produces events related to Bus positions and provides information about the location, direction, next stop etc.
 
